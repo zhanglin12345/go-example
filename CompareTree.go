@@ -57,14 +57,14 @@ func doWork(t *tree.Tree, ch chan int) {
 	close(ch)
 }
 
-func main() {
-	ch1 := make(chan int)
-	t1 := tree.New(1)
-	t2 := tree.New(2)
+// func main() {
+// 	ch1 := make(chan int)
+// 	t1 := tree.New(1)
+// 	t2 := tree.New(2)
 
-	t2.Right = &tree.Tree{nil, 999, nil}
+// 	t2.Right = &tree.Tree{nil, 999, nil}
 
-	go doWork(t1, ch1)
+// 	go doWork(t1, ch1)
 
-	fmt.Println(doCheck(t2, ch1))
-}
+// 	fmt.Println(doCheck(t2, ch1))
+// }
