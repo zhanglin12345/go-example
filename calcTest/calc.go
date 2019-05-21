@@ -33,6 +33,7 @@ func do(money float64) (float64, float64) {
 }
 
 func main() {
+	fmt.Println("钱			赚/赔")
 	money := initMoney
 	var odd float64
 	for i := 0; i <= tradeTimes; i++ {
@@ -45,5 +46,5 @@ func main() {
 		}
 	}
 	fmt.Printf("初始资金:%v, 交易了%v次，其中%v次赔了%v%%，%v次赚了0到%v%% \n", initMoney, tradeTimes, tradeTimes-times, lossRatio, times, interestMax)
-	fmt.Printf("最终资金%v, 赚了%.2f%%，", money, money/initMoney*100)
+	fmt.Printf("最终资金%v, 赚了%.2f%%", money, money/initMoney*100)
 }
