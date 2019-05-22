@@ -10,11 +10,11 @@ import (
 )
 
 var times int
-var initMoney float64 = 10000 //initial money
-const loseOdd = 40            //30%
-const lossRatio float64 = 3   //5%
-const interestMax int = 5     //0%~10%
-const tradeTimes = 1000       //trade 100 times
+var initMoney float64 = 200000 //initial money
+const loseOdd = 40             //30%
+const lossRatio float64 = 3    //5%
+const interestMax int = 5      //0%~10%
+const tradeTimes = 100         //trade 100 times
 
 func do(money float64) (float64, float64) {
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -33,7 +33,7 @@ func do(money float64) (float64, float64) {
 }
 
 func main() {
-	fmt.Println("钱			赚/赔")
+
 	money := initMoney
 	var odd float64
 	for i := 0; i <= tradeTimes; i++ {
