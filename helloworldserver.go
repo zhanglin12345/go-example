@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/valyala/fasthttp"
 )
@@ -27,6 +28,7 @@ func main() {
 }
 
 func requestHandler(ctx *fasthttp.RequestCtx) {
+	time.Sleep(400 * time.Millisecond)
 	fmt.Fprintf(ctx, "Hello, world!\n\n")
 
 	fmt.Fprintf(ctx, "Request method is %q\n", ctx.Method())
