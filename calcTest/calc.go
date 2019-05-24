@@ -14,7 +14,7 @@ var initMoney float64 = 10000 //initial money
 const loseOdd = 40            //40%
 const lossRatio float64 = 3   //3%
 const interestMax int = 5     //0%~5%
-const tradeTimes = 500        //trade 100 times
+const tradeTimes = 50         //trade 100 times
 
 func do(money float64) (float64, float64) {
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
