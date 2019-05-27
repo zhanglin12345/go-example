@@ -4,12 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"time"
+
+	"github.com/buaazp/fasthttprouter"
 
 	"github.com/valyala/fasthttp"
 )
 
 var (
-	addr     = flag.String("addr", ":8080", "TCP address to listen to")
+	addr     = flag.String("addr", ":9999/test", "TCP address to listen to")
 	compress = flag.Bool("compress", false, "Whether to enable transparent response compression")
 )
 
@@ -22,6 +25,9 @@ func main() {
 		h = fasthttp.CompressHandler(h)
 	}
 
+	router := fasthttprouter.New()
+	router.Post("/hello", requestHandler)
+
 	if err := fasthttp.ListenAndServe(*addr, h); err != nil {
 		log.Fatalf("Error in ListenAndServe: %s", err)
 	}
@@ -31,6 +37,7 @@ var value string = "{\"events\": [     {       \"elementName\": \"button01\",   
 var p *string
 
 func requestHandler(ctx *fasthttp.RequestCtx) {
+	time.Sleep(500 * time.Millisecond)
 	fmt.Fprintf(ctx, *p)
 	// fmt.Fprintf(ctx, "Hello, world!\n\n")
 
@@ -47,7 +54,7 @@ func requestHandler(ctx *fasthttp.RequestCtx) {
 
 	// fmt.Fprintf(ctx, "Raw request is:\n---CUT---\n%s\n---CUT---", &ctx.Request)
 
-	ctx.SetContentType("text/plain; charset=utf8")
+	ctx.SetContentType("application/json")
 
 	// Set arbitrary headers
 	ctx.Response.Header.Set("X-My-Header", "my-header-value")
