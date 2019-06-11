@@ -18,11 +18,16 @@ func equal(a, b []int) bool {
 }
 
 func main() {
-	// testBasic()
+	testBasic()
 
-	value := 1
-	result := findClosest([]int{100, 99, 85, 33, 32, 16, 10, 5, 3, 2}, value)
-	fmt.Printf("the array is %v and sum is %v closed to %v \n", result, sum(result), value)
+	// value := 384
+	// result := findClosest([]int{100, 99, 85, 33, 32, 16, 10, 5, 3, 2}, value)
+	// fmt.Printf("the array is %v and sum is %v closed to %v \n", result, sum(result), value)
+
+	// list := []int{8, 8, 6, 5, 5, 4}
+	// value := 3
+	// result := findClosest(list, value)
+	// fmt.Printf("the array is %v and sum is %v closed to %v \n", result, sum(result), value)
 }
 
 func printFalse(a []int, value int, b []int) {
@@ -36,20 +41,31 @@ func findClosest(list []int, value int) []int {
 	diff := math.MaxInt32
 	var count int
 	var finalArray, tmpArray []int
-	for first := range list {
-		count++
-		slice := list[first:len(list)]
+loopOutside:
+	for firstIndex, firstValue := range list {
+		if firstValue >= value {
+			count++
+			if firstValue-value < diff {
+				diff = firstValue - value
+			}
+			finalArray = nil
+			finalArray = append(finalArray, firstValue)
+			continue
+		}
+
+		slice := list[firstIndex:len(list)]
 
 		sum := sum(slice)
 		if sum <= value {
 			if value-sum < diff {
 				finalArray = slice
 				break
+			} else {
+				break
 			}
 		}
 
 		remaining := value
-	loop:
 		for index, element := range slice {
 			count++
 			switch {
@@ -79,16 +95,13 @@ func findClosest(list []int, value int) []int {
 					}
 				}
 			default:
-				diff = 0
 				tmpArray = append(tmpArray, element)
-				break loop
+				finalArray = tmpArray
+				break loopOutside
 			}
 		}
 
-		if diff == 0 {
-			finalArray = tmpArray
-			break
-		} else if tmpArray != nil {
+		if tmpArray != nil {
 			finalArray = tmpArray
 			tmpArray = nil
 		}
@@ -128,7 +141,6 @@ func check(condition bool, trueVal, falseVal interface{}) interface{} {
 
 func testBasic() {
 	list := [6]int{8, 7, 6, 5, 5, 5}
-
 	slice := list[0:]
 	printFalse(slice, 1, []int{5})
 	printFalse(slice, 2, []int{5})
@@ -150,7 +162,7 @@ func testBasic() {
 	printFalse(slice, 18, []int{7, 6, 5})
 	printFalse(slice, 20, []int{8, 7, 5})
 	printFalse(slice, 21, []int{8, 7, 6})
-	printFalse(slice, 22, []int{6, 5, 5, 5})
+	printFalse(slice, 22, []int{8, 7, 6})
 	printFalse(slice, 23, []int{7, 6, 5, 5})
 	printFalse(slice, 24, []int{7, 6, 5, 5})
 	printFalse(slice, 25, []int{8, 7, 6, 5})
