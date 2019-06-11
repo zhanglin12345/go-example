@@ -12,9 +12,9 @@ import (
 var times int
 var initMoney float64 = 10000 //initial money
 const loseOdd = 40            //40%
-const lossRatio float64 = 5   //3%
-const interestMax int = 10    //0%~5%
-const tradeTimes = 10         //trade 100 times
+const lossRatio float64 = 3   //3%
+const interestMax int = 5     //0%~5%
+const tradeTimes = 100        //trade 100 times
 
 func do(money float64) (float64, float64) {
 	random := rand.New(rand.NewSource(time.Now().UnixNano()))
