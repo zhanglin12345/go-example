@@ -5,17 +5,7 @@ import (
 	"math"
 )
 
-func equal(a, b []int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-	return true
-}
+var count int
 
 func main() {
 	testBasic()
@@ -39,30 +29,17 @@ func printFalse(a []int, value int, b []int) {
 
 func findClosest(list []int, value int) []int {
 	diff := math.MaxInt32
-	var count int
+	count = 0
 	var finalArray, tmpArray []int
 loopOutside:
 	for firstIndex, firstValue := range list {
-		if firstValue >= value {
-			count++
-			if firstValue-value < diff {
-				diff = firstValue - value
-			}
-			finalArray = nil
-			finalArray = append(finalArray, firstValue)
+		if handleSmallNumber(firstValue, value, &diff, &finalArray) {
 			continue
 		}
 
 		slice := list[firstIndex:len(list)]
-
-		sum := sum(slice)
-		if sum <= value {
-			if value-sum < diff {
-				finalArray = slice
-				break
-			} else {
-				break
-			}
+		if handleBigNumber(&slice, value, diff, &finalArray) {
+			break
 		}
 
 		remaining := value
@@ -70,45 +47,83 @@ loopOutside:
 			count++
 			switch {
 			case remaining-element > 0:
-				remaining -= element
-				tmpArray = append(tmpArray, element)
-
-				if isLastElement(index, slice) {
-					if remaining > diff {
-						tmpArray = nil
-					}
-				}
+				handleBiggerRemaining(&slice, &remaining, element, index, diff, &tmpArray)
 			case remaining-element < 0:
-				if isLastElement(index, slice) {
-					tmpDiff := abs(remaining - element)
-					switch min(diff, tmpDiff, remaining) {
-					case diff:
-						tmpArray = nil
-					case tmpDiff:
-						tmpArray = append(tmpArray, element)
-						diff = tmpDiff
-					case remaining:
-						diff = remaining
-						if tmpArray == nil {
-							tmpArray = append(tmpArray, element)
-						}
-					}
-				}
+				handleSmallerRemaining(&slice, remaining, element, index, &diff, &tmpArray)
 			default:
-				tmpArray = append(tmpArray, element)
-				finalArray = tmpArray
+				handleJustRemaining(&tmpArray, &finalArray, element)
 				break loopOutside
 			}
 		}
 
-		if tmpArray != nil {
-			finalArray = tmpArray
-			tmpArray = nil
-		}
+		moveToFinalArray(&tmpArray, &finalArray)
 	}
 
 	fmt.Println(count)
 	return finalArray
+}
+
+func handleSmallNumber(firstValue, value int, diff *int, finalArray *[]int) bool {
+	if firstValue >= value {
+		count++
+		if firstValue-value < *diff {
+			*diff = firstValue - value
+		}
+		*finalArray = nil
+		*finalArray = append(*finalArray, firstValue)
+		return true
+	}
+	return false
+}
+
+func handleBigNumber(slice *[]int, value, diff int, finalArray *[]int) bool {
+	sum := sum(*slice)
+	if sum <= value {
+		if value-sum < diff {
+			*finalArray = *slice
+		}
+		return true
+	}
+	return false
+}
+
+func handleBiggerRemaining(slice *[]int, remaining *int, element, index, diff int, tmpArray *[]int) {
+	*remaining -= element
+	*tmpArray = append(*tmpArray, element)
+
+	if isLastElement(index, slice) && *remaining > diff {
+		tmpArray = nil
+	}
+}
+
+func handleSmallerRemaining(slice *[]int, remaining, element, index int, diff *int, tmpArray *[]int) {
+	if isLastElement(index, slice) {
+		tmpDiff := abs(remaining - element)
+		switch min(*diff, tmpDiff, remaining) {
+		case *diff:
+			*tmpArray = nil
+		case tmpDiff:
+			*tmpArray = append(*tmpArray, element)
+			*diff = tmpDiff
+		case remaining:
+			*diff = remaining
+			if *tmpArray == nil {
+				*tmpArray = append(*tmpArray, element)
+			}
+		}
+	}
+}
+
+func handleJustRemaining(tmpArray, finalArray *[]int, element int) {
+	*tmpArray = append(*tmpArray, element)
+	*finalArray = *tmpArray
+}
+
+func moveToFinalArray(tmpArray, finalArray *[]int) {
+	if *tmpArray != nil {
+		*finalArray = *tmpArray
+		*tmpArray = nil
+	}
 }
 
 func abs(n int) int {
@@ -123,8 +138,8 @@ func sum(value []int) int {
 	return sum
 }
 
-func isLastElement(index int, slice []int) bool {
-	return index == len(slice)-1
+func isLastElement(index int, slice *[]int) bool {
+	return index == len(*slice)-1
 }
 
 func min(x, y, z int) int {
@@ -179,4 +194,16 @@ func testBasic() {
 	printFalse(slice, 36, []int{8, 7, 6, 5, 5, 5})
 	printFalse(slice, 37, []int{8, 7, 6, 5, 5, 5})
 	printFalse(slice, 100, []int{8, 7, 6, 5, 5, 5})
+}
+
+func equal(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
 }
