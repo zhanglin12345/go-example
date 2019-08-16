@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "/Users/linzhang/go/src/go-example/algo/NumberAppearOnce.go",
+            "program": "/Users/linzhang/go/src/go-example/strategy/calcStrategy.go",
             "env": {},
             "args": []
         }
